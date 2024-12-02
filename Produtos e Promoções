@@ -1,0 +1,65 @@
+class Produto: 
+    def __init__(self,  nome,  preco,  estoque,  categoria): 
+        self.nome = nome
+        self.preco = preco
+        self.estoque = estoque
+        self.categoria = categoria
+
+    def aplicar_desconto(self,  porcentagem): 
+        desconto = self.preco * (porcentagem / 100)
+        self.preco -= desconto
+
+    def atualizar_estoque(self,  quantidade): 
+        if quantidade < 0 and abs(quantidade) > self.estoque: 
+            raise ValueError("Estoque insuficiente.")
+        self.estoque += quantidade
+
+    def __str__(self): 
+        return f"{self.nome} - R${self.preco:.2f} ({self.estoque} em estoque, Categoria: {self.categoria})"
+
+class Promocao: 
+    def __init__(self,  descricao,  produtos,  desconto): 
+        self.descricao = descricao
+        self.produtos = produtos
+        self.desconto = desconto
+
+    def aplicar_promocao(self): 
+        for produto in self.produtos: 
+            produto.aplicar_desconto(self.desconto)
+
+    def __str__(self): 
+        produtos_lista = ", ".join([produto.nome for produto in self.produtos])
+        return f"Promoção: {self.descricao}\nProdutos: {produtos_lista}\nDesconto: {self.desconto}%"
+
+# Cadastro de produtos
+produto1 = Produto("Whey Protein",  150.00,  100,  "Proteínas")
+produto2 = Produto("BCAA 2: 1: 1",  60.00,  50,  "Aminoácidos")
+produto3 = Produto("Creatina Monohidratada",  80.00,  75,  "Performance")
+produto4 = Produto("Pré-Treino",  120.00,  30,  "Energia")
+
+# Exibição inicial dos produtos
+print("Produtos disponíveis: ")
+for produto in [produto1, produto2, produto3, produto4]: 
+    print(produto)
+
+# Criando uma promoção
+promocao = Promocao("Black Friday Fitness",  [produto1, produto3],  25)
+
+# Antes da promoção
+print("\nAntes da promoção: ")
+print(promocao)
+
+# Aplicando a promoção
+promocao.aplicar_promocao()
+
+# Exibição após a promoção
+print("\nDepois da promoção: ")
+for produto in [produto1, produto2, produto3, produto4]: 
+    print(produto)
+
+# Atualizando estoque
+print("\nAtualizando estoques: ")
+produto1.atualizar_estoque(-10)  # Venda de 10 unidades
+produto4.atualizar_estoque(20)  # Recebimento de mais 20 unidades
+print(produto1)
+print(produto4)
